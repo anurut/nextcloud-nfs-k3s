@@ -1,0 +1,42 @@
+# https://blog.true-kubernetes.com/self-host-nextcloud-using-kubernetes/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nextcloud
+  replicas: 1 # tells deployment to run 1 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+    spec:
+      containers:
+      - name: nextcloud
+        image: ghcr.io/linuxserver/nextcloud
+        env:
+        - name: PUID
+          value: "\x31\x30\x30\x30" # "\x31\x30\x30\x30"
+        - name: PGID
+          value: "\x31\x30\x30\x30"
+        - name: TZ
+          value: Asia/Kolkata
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        # name must match the volume name below
+        - name: config
+          mountPath: "/config"
+        - name: data
+          mountPath: "/data"
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: nextcloud-config-pvc
+      - name: data
+        persistentVolumeClaim:
+          claimName: nextcloud-data-pvc
+      nodeSelector:
+        ename: rpi4

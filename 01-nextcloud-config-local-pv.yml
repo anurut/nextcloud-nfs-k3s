@@ -1,0 +1,25 @@
+# This is an example of local-storage persistent volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-config-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage # this is used to create a pvc
+  local:
+    path: /mnt/nextcloud/config # the path which is to be mounted to the container
+  
+  # this is to specify on which node this persistent volume will be created
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - rpi-4
