@@ -4,8 +4,7 @@ metadata:
   name: nextcloud-data-pv
 spec:
   capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
+    storage: 55555  volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
